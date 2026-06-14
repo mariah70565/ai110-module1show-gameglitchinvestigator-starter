@@ -1,68 +1,6 @@
 import random
 import streamlit as st
-
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
-
-
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
-        else:
-            return "Too Low", "📉 Go LOWER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
-
-
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
-
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
-
-    if outcome == "Too Low":
-        return current_score - 5
-
-    return current_score
+from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score    
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -131,9 +69,14 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: The "New Game" button doesn't reset the game properly. The status is not reset to "playing", so after winning or losing once, you can't play again without refreshing the page. The score and history should also reset
+# FIX: The "New Game" button now properly resets the game state, including the secret number, attempts, score, history, and status. Refactored the new game logic to ensure all relevant session state variables are reset and the game can be played again without refreshing the page.
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
+    st.session_state.score = 0
+    st.session_state.history = []
+    st.session_state.status = "playing"
     st.success("New game started.")
     st.rerun()
 
@@ -155,10 +98,9 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
+        # FIXME: The secret is casted as a string every other attempt, meaning we're comparing lexicographically instead of numerically, which causes the hints to be incorrect. For example, if the secret is 50 and you guess 60, it will say "Go HIGHER!" because "60" > "50" as strings. This is a critical bug that breaks the game logic.
+        # FIX: Avoided str vs int comparison bug by ensuring guess is always an int and secret is always an int. Refactored check_guess to handle this properly.
+        secret = st.session_state.secret
 
         outcome, message = check_guess(guess_int, secret)
 
