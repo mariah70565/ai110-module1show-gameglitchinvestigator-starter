@@ -48,6 +48,7 @@ Document at least 3 bugs you found. Add rows as needed.
 ## 4. What did you learn about Streamlit and state?
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+    - Streamlit reruns is re-executing the entire script whenever a user interacts with the program, such as clicking New Game or submitting a guess. Session state preserves variables across reruns, such as the secret number, score, and the attempt counter.
 
 ---
 
@@ -55,5 +56,8 @@ Document at least 3 bugs you found. Add rows as needed.
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+  - I want to continue utilizing AI for composing test files and test cases to quickly validate behavior changes before and after bug fixes. I find it to be more efficient than creating it from scratch. It's also good to have another opinion on how the program should operate.
 - What is one thing you would do differently next time you work with AI on a coding task?
+    - I think I would be a little more descriptive than I was when asking for clarity on code or requesting certain actions such as generating a git commit msg. A lot of the times I would add details as the conversation grew, but I should have started off with all the details from the start. This would also allow for using less of my message budget.
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+    - I used to think that AI generated code was looked down upon. After this first class and first project, I realized it's actually become a standard practice, especially for redundant tasks such as generating test files or coming up with commit messages. 

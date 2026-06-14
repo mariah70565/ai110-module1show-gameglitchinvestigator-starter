@@ -26,19 +26,26 @@ It wrote the code, ran away, and now the game is unplayable.
 ## 📝 Document Your Experience
 
 - [ ] Describe the game's purpose.
+    - The game allows for a user to guess a secret number, providing hints after each guess that leads them closer to the solution. A user is able to replay as many times as desired, with a new secret number generated each time.
 - [ ] Detail which bugs you found.
+    - Hints were reversed, such that if a user guesses a number higher than the secret, the game would suggest to go higher, and similar if the guess is lower than the secret.
+    - When clicking "new game", a user wouldn't be able input any new guesses, despite a new secret number being generated. The only way to play a new game would be by refreshing the page entirely.
 - [ ] Explain what fixes you applied.
+    - For the backward hints, I change the hint messages to suggest going lower when a guess is too high and going higher when a guess is too low. I also removed the every-other-game string casting on the secret number to avoid lexiographic comparisons. This allowed for proper numerical comparisions to determine which hint too return.
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
-
+1. User enters a guess of 70
+2. Game returns "Too High, go LOWER"
+3. Score goes down
+4. User enters a guess of 50
+5. Game returns "Too High, go LOWER"
+6. Score goes down
+7. User enters a guess of 45
+8. Game returns "You won!" with final score
+9. Game ends
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
 ## 🧪 Test Results
@@ -48,6 +55,7 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 # pytest tests/
 # ========================= X passed in 0.XXs =========================
 ```
+================================= 5 passed in 0.86s ==================================
 
 ## 🚀 Stretch Features
 
